@@ -1,15 +1,16 @@
-package bytewriter
+package bytewriter_test
 
 import (
 	"bytes"
-	"io"
 	"testing"
+
+	"github.com/noxer/bytewriter"
 )
 
 func TestWriter(t *testing.T) {
 	buf := make([]byte, 8)
 
-	w := New(buf)
+	w := bytewriter.New(buf)
 	if w == nil {
 		t.Fatal("New returned nil")
 	}
@@ -34,8 +35,8 @@ func TestWriter(t *testing.T) {
 	}
 
 	n, err = w.Write([]byte("too much"))
-	if n != 0 || err != io.EOF {
-		t.Errorf("Expected write (0, EOF); got (%d, %#v)", n, err)
+	if n != 0 || err != bytewriter.SliceFull {
+		t.Errorf("Expected write (0, SliceFull); got (%d, %#v)", n, err)
 	}
 	if b := w.Written(); b != 8 {
 		t.Errorf("Expected written 8; got %d", b)
@@ -45,11 +46,11 @@ func TestWriter(t *testing.T) {
 		t.Errorf("Expected buffer %#v; got %#v", buf, []byte("testingt"))
 	}
 
-	w = New(buf)
+	w = bytewriter.New(buf)
 
 	n, err = w.Write([]byte("this is a long string"))
-	if n != 8 || err != io.EOF {
-		t.Errorf("Expected write (8, EOF); got (%d, %#v)", n, err)
+	if n != 8 || err != bytewriter.SliceFull {
+		t.Errorf("Expected write (8, FullError); got (%d, %#v)", n, err)
 	}
 
 	if !bytes.Equal(buf, []byte("this is ")) {
@@ -60,8 +61,8 @@ func TestWriter(t *testing.T) {
 	}
 
 	n, err = w.Write([]byte("t"))
-	if n != 0 || err != io.EOF {
-		t.Errorf("Expected write (0, EOF); got (%d, %#v)", n, err)
+	if n != 0 || err != bytewriter.SliceFull {
+		t.Errorf("Expected write (0, SliceFull); got (%d, %#v)", n, err)
 	}
 	if b := w.Written(); b != 8 {
 		t.Errorf("Expected written 8; got %d", b)
