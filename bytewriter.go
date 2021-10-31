@@ -2,8 +2,8 @@ package bytewriter
 
 import "errors"
 
-// SliceFull is returned when the target byte slice can hold no more data.
-var SliceFull = errors.New("bytewriter: slice is full")
+// ErrSliceFull is returned when the target byte slice can hold no more data.
+var ErrSliceFull = errors.New("bytewriter: slice is full")
 
 // Writer allows writing into a byte slice without reallocating it.
 type Writer struct {
@@ -12,17 +12,17 @@ type Writer struct {
 }
 
 // New creates a new io.Writer that writes all data in to p, it will never reallocate p.
-// When p is full the writer returns bytewriter.SliceFull as the error. The writer does not support concurrent use.
+// When p is full the writer returns bytewriter.ErrSliceFull as the error. The writer does not support concurrent use.
 func New(p []byte) *Writer {
 	return &Writer{p: p, s: len(p)}
 }
 
-// Write writes bytes into the byte slice, returning bytewriter.SliceFull as an error when it is full. It will
+// Write writes bytes into the byte slice, returning bytewriter.ErrSliceFull as an error when it is full. It will
 // never expand the slice.
 func (w *Writer) Write(p []byte) (n int, err error) {
 	// Check for a full slice
 	if len(w.p) == 0 {
-		return 0, SliceFull
+		return 0, ErrSliceFull
 	}
 
 	// Copy the data
@@ -31,7 +31,7 @@ func (w *Writer) Write(p []byte) (n int, err error) {
 	if len(w.p) < len(p) {
 		// Completely filled w.p and more bytes waiting
 		n = len(w.p)
-		err = SliceFull
+		err = ErrSliceFull
 		w.p = nil
 		return
 	}
@@ -52,7 +52,7 @@ func (w *Writer) Write(p []byte) (n int, err error) {
 func (w *Writer) WriteByte(c byte) error {
 	// Check for a full slice
 	if len(w.p) == 0 {
-		return SliceFull
+		return ErrSliceFull
 	}
 
 	w.p[0] = c

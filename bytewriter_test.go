@@ -35,8 +35,8 @@ func TestWriter(t *testing.T) {
 	}
 
 	n, err = w.Write([]byte("too much"))
-	if n != 0 || err != bytewriter.SliceFull {
-		t.Errorf("Expected write (0, SliceFull); got (%d, %#v)", n, err)
+	if n != 0 || err != bytewriter.ErrSliceFull {
+		t.Errorf("Expected write (0, ErrSliceFull); got (%d, %#v)", n, err)
 	}
 	if b := w.Written(); b != 8 {
 		t.Errorf("Expected written 8; got %d", b)
@@ -49,7 +49,7 @@ func TestWriter(t *testing.T) {
 	w = bytewriter.New(buf)
 
 	n, err = w.Write([]byte("this is a long string"))
-	if n != 8 || err != bytewriter.SliceFull {
+	if n != 8 || err != bytewriter.ErrSliceFull {
 		t.Errorf("Expected write (8, FullError); got (%d, %#v)", n, err)
 	}
 
@@ -61,8 +61,8 @@ func TestWriter(t *testing.T) {
 	}
 
 	n, err = w.Write([]byte("t"))
-	if n != 0 || err != bytewriter.SliceFull {
-		t.Errorf("Expected write (0, SliceFull); got (%d, %#v)", n, err)
+	if n != 0 || err != bytewriter.ErrSliceFull {
+		t.Errorf("Expected write (0, ErrSliceFull); got (%d, %#v)", n, err)
 	}
 	if b := w.Written(); b != 8 {
 		t.Errorf("Expected written 8; got %d", b)
