@@ -2,7 +2,7 @@ package bytewriter
 
 import "errors"
 
-// ErrSliceFull is returned when the target byte slice can hold no more data.
+// ErrSliceFull is returned when the target byte slice can't hold additional data.
 var ErrSliceFull = errors.New("bytewriter: slice is full")
 
 // Writer allows writing into a byte slice without reallocating it.
