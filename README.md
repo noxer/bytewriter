@@ -1,3 +1,5 @@
+Moved to https://codeberg.org/plusmid/bytewriter
+
 # bytewriter
 Writer for fixed size byte slices.
 
